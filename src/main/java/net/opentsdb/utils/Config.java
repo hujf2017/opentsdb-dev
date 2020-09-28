@@ -12,6 +12,7 @@
 // see <http://www.gnu.org/licenses/>.
 package net.opentsdb.utils;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -665,7 +666,10 @@ public class Config {
 
     for (String file : file_locations) {
       try {
-        FileInputStream file_stream = new FileInputStream(file);
+        System.out.println();
+        file = new File(".").getAbsolutePath().toString()+"src\\main\\resources\\" +file;
+
+        FileInputStream file_stream = new FileInputStream("F:\\ziyuan\\workspace2\\opentsdbdev1\\src\\main\\resources\\opentsdb.conf");
         Properties props = new Properties();
         props.load(file_stream);
 

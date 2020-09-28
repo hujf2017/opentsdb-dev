@@ -607,6 +607,7 @@ final class MetricForm extends HorizontalPanel implements Focusable {
   }
 
   private final BlurHandler recompact_tagtable = new BlurHandler() {
+    @Override
     public void onBlur(final BlurEvent event) {
       int ntags = getNumTags();
       // Is the first line empty?  If yes, move everything up by 1 line.
