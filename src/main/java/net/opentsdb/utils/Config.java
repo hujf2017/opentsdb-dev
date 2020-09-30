@@ -667,8 +667,8 @@ public class Config {
     for (String file : file_locations) {
       try {
         System.out.println(new File(".").getAbsolutePath().toString());
-        String s = "\\src\\main\\resources\\"+file;
-        FileInputStream file_stream = new FileInputStream("F:\\ziyuan\\workspace2\\openForWindows\\src\\main\\resources\\"+file);
+        file = "F:\\ziyuan\\workspace2\\openForWindows\\src\\main\\resources\\"+file;
+        FileInputStream file_stream = new FileInputStream(file);
         Properties props = new Properties();
         props.load(file_stream);
 
