@@ -97,8 +97,7 @@ final class HttpQuery extends AbstractHttpQuery {
    * @param request The request in this HTTP query.
    * @param chan The channel on which the request was received.
    */
-  public HttpQuery(final TSDB tsdb, final HttpRequest request, final Channel chan) {
-    super(tsdb, request, chan);
+  public HttpQuery(final TSDB tsdb, final HttpRequest request, final Channel chan) { super(tsdb, request, chan);
     this.show_stack_trace =
       tsdb.getConfig().getBoolean("tsd.http.show_stack_trace");
     this.serializer = new HttpJsonSerializer(this);
