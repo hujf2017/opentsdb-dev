@@ -667,7 +667,7 @@ public class Config {
     for (String file : file_locations) {
       try {
         System.out.println(new File(".").getAbsolutePath().toString());
-        file = "F:\\ziyuan\\workspace2\\openForWindows\\src\\main\\resources\\"+file;
+        file = this.getClass().getClassLoader().getResource("opentsdb.conf").getPath();
         FileInputStream file_stream = new FileInputStream(file);
         Properties props = new Properties();
         props.load(file_stream);
