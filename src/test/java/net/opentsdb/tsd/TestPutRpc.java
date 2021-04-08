@@ -61,7 +61,7 @@ public final class TestPutRpc extends BaseTestPutRpc {
     final PutDataPointRpc put = new PutDataPointRpc(tsdb.getConfig());
     final Channel chan = NettyMocks.fakeChannel();
     put.execute(tsdb, chan, new String[] { "put", METRIC_STRING, 
-        "1365465600", "42", TAGK_STRING + "=" + TAGV_STRING })
+        "1617785507", "42", TAGK_STRING + "=" + TAGV_STRING })
       .joinUninterruptibly();
     validateCounters(1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     verify(chan, never()).write(any());
@@ -114,7 +114,7 @@ public final class TestPutRpc extends BaseTestPutRpc {
     final PutDataPointRpc put = new PutDataPointRpc(tsdb.getConfig());
     final Channel chan = NettyMocks.fakeChannel();
     put.execute(tsdb, chan, new String[] { "put", NSUN_METRIC, 
-        "1365465600", "42", TAGK_STRING + "=" + TAGV_STRING })
+        "1617785749", "42", TAGK_STRING + "=" + TAGV_STRING })
       .joinUninterruptibly();
     validateCounters(1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
     verify(chan, times(1)).write(any());
