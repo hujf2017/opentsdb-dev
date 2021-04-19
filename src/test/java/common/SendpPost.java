@@ -18,7 +18,7 @@ import com.alibaba.fastjson.JSON;
  * @date 2021/4/17 0017下午 4:21
  * @description: TODO
  */
-public class sendpPost {
+public class SendpPost {
     private static CloseableHttpClient httpClient;
     public static void  main(String[] args) throws Exception {
         httpClient = HttpClients.createDefault();
