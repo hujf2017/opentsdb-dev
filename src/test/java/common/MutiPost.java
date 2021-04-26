@@ -19,25 +19,40 @@ import java.util.concurrent.Executors;
  */
 public class MutiPost {
     private static CloseableHttpClient httpClient;
-    private static final String url="http://192.168.3.102:4242/api/put?async";
-    private static CountDownLatch count = new CountDownLatch(20);
-    public static void main(String[] args) throws InterruptedException {
-        httpClient = HttpClients.createDefault();
-        long start = System.currentTimeMillis();
-        for(int i=0;i<20;i++) {
-            int finalI = i;
-             new Thread(()->{
-                 for(int j=0;j<1000;j++) {
-                     String string = getJson(finalI);
-                     sendPost(string);
-                     System.out.println("Thread-"+finalI+"-"+j+" is finished" );
-                 }
-                 count.countDown();
-            }).start();
+    private static final String url = "http://192.168.3.102:4242/api/put?async";
+
+    private static int ThreadNum = 40;  //线程数模拟主机数、或者机器数
+    private static int CirculNum = 125; //单线程循环次数
+    private static int pointNun = 200; //单次post请求点数
+    private static CountDownLatch count = new CountDownLatch(ThreadNum);
+
+    public static void main(String[] args) {
+        try {
+            httpClient = HttpClients.createDefault();
+            long start = System.currentTimeMillis();
+            for (int i = 0; i < ThreadNum; i++) {
+                int finalI = i;
+                new Thread(() -> {
+                    for (int j = 0; j < CirculNum; j++) {
+                        String string = getJson(finalI);
+                        sendPost(string);
+                        System.out.println("Thread-" + finalI + "-" + j + " is finished");
+                    }
+                    count.countDown();
+                }).start();
+            }
+            count.await();
+            long end = System.currentTimeMillis();
+            System.out.println(end - start);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        count.await();
-        long end = System.currentTimeMillis();
-        System.out.println(end -start);
     }
 
     private static void sendPost(String string) {
@@ -55,15 +70,15 @@ public class MutiPost {
 
     public static String getJson(int j) {
         List<Object> list = new ArrayList<>();
-        for (int i = 0; i <50  ; i++) {
+        for (int i = 0; i < pointNun; i++) {
             long Starttime = System.currentTimeMillis();
             Map<String, Object> map1 = new HashMap<>();
             Map<String, String> tags = new HashMap<>();
 
-            tags.put("host", "00"+j );
-            tags.put("gateMac", "00"+i);
+            tags.put("host", "00" + j);
+            tags.put("gateMac", "00" + i);
             map1.put("metric", "test");
-            map1.put("value", Math.random()*100);
+            map1.put("value", Math.random() * 100);
             map1.put("tags", tags);
             //   System.out.println(i + "条数据");
             map1.put("timestamp", Starttime);
