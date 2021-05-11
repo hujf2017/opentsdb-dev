@@ -8,8 +8,7 @@ import org.apache.http.impl.client.HttpClients;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 /**
  * @author Hujf
@@ -19,12 +18,14 @@ import java.util.concurrent.Executors;
  */
 public class MutiPost {
     private static CloseableHttpClient httpClient;
-    private static final String url = "http://192.168.3.102:4242/api/put?async";
+    private static final String url = "http://127.0.0.1:4242/api/put?async";
 
     private static int ThreadNum = 40;  //线程数模拟主机数、或者机器数
-    private static int CirculNum = 125; //单线程循环次数
-    private static int pointNun = 200; //单次post请求点数
+    private static int CirculNum = 250; //单线程循环次数
+    private static int pointNun = 100; //单次post请求点数
     private static CountDownLatch count = new CountDownLatch(ThreadNum);
+    private static ThreadPoolExecutor executors = new ThreadPoolExecutor(20,40,1000L, TimeUnit.SECONDS,new LinkedBlockingQueue<>());
+
 
     public static void main(String[] args) {
         try {
@@ -32,14 +33,14 @@ public class MutiPost {
             long start = System.currentTimeMillis();
             for (int i = 0; i < ThreadNum; i++) {
                 int finalI = i;
-                new Thread(() -> {
+                executors.execute(()->{
                     for (int j = 0; j < CirculNum; j++) {
                         String string = getJson(finalI);
                         sendPost(string);
                         System.out.println("Thread-" + finalI + "-" + j + " is finished");
                     }
                     count.countDown();
-                }).start();
+                });
             }
             count.await();
             long end = System.currentTimeMillis();
@@ -48,6 +49,7 @@ public class MutiPost {
             e.printStackTrace();
         }finally {
             try {
+                executors.shutdown();
                 httpClient.close();
             } catch (IOException e) {
                 e.printStackTrace();
