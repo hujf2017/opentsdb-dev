@@ -24,8 +24,7 @@ public class MutiPost {
     private static int CirculNum = 250; //单线程循环次数
     private static int pointNun = 100; //单次post请求点数
     private static CountDownLatch count = new CountDownLatch(ThreadNum);
-    private static ThreadPoolExecutor executors = new ThreadPoolExecutor(20,40,1000L, TimeUnit.SECONDS,new LinkedBlockingQueue<>());
-
+    private static ThreadPoolExecutor executors = new ThreadPoolExecutor(20, 40, 1000L, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
 
     public static void main(String[] args) {
         try {
@@ -33,21 +32,22 @@ public class MutiPost {
             long start = System.currentTimeMillis();
             for (int i = 0; i < ThreadNum; i++) {
                 int finalI = i;
-                executors.execute(()->{
-                    for (int j = 0; j < CirculNum; j++) {
+                for (int j = 0; j < CirculNum; j++) {
+                    executors.execute(() -> {
                         String string = getJson(finalI);
                         sendPost(string);
-                        System.out.println("Thread-" + finalI + "-" + j + " is finished");
-                    }
-                    count.countDown();
-                });
+                        System.out.println("Thread-" + finalI + " " + " is finished");
+
+                        count.countDown();
+                    });
+                }
             }
             count.await();
             long end = System.currentTimeMillis();
             System.out.println(end - start);
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 executors.shutdown();
                 httpClient.close();
